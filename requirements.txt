@@ -8,3 +8,4 @@ langchain==0.0.352
 pypdf==3.17.4
 pinecone-client==2.2.4
 weasyprint==60.2
+pango==1.0-0
