@@ -6,3 +6,4 @@ pdfkit==1.0.0
 tiktoken==0.5.2
 langchain==0.0.352
 pypdf==3.17.4
+pinecone-client==2.2.4
