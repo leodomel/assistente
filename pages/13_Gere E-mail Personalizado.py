@@ -38,7 +38,7 @@ def gera_pdf(dataset):
  	html = template.render(tabela_html=tabela_html)
  	return pdfkit.from_string(html, False)
 
-dados = pd.read_csv('C:\\Milena\\Pós SENAICIMATEC\\Machine Learning Hands on\\Assistente\\recursos\\PesquisaResumida.csv')
+dados = pd.read_csv('recursos/PesquisaResumida.csv')
 
 dados['E-mail Personalizado'] = ''
 

@@ -5,7 +5,7 @@ from pycaret.regression import load_model, predict_model
 #from pycaret.datasets import get_data
 #'position_grid', 'ct_points', 'ct_position', 'ct_wins', dr_wins', 'pt_stop', 'pt_dur_milliseconds'
 
-dados = pd.read_csv('C:\\Milena\\Pós SENAICIMATEC\\Machine Learning Hands on\\Exercicio\\dados\\resul_races.csv')
+dados = pd.read_csv('recursos/resul_races.csv')
 modelo = load_model('recursos/modelo-previsao-se-piloto-pontuou')
 
 
