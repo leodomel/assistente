@@ -36,7 +36,10 @@ def gera_pdf(dataset):
  	template = env.get_template("template_email.html")
  	tabela_html = dataset.to_html()
  	html = template.render(tabela_html=tabela_html)
- 	return pdfkit.from_string(html, False)
+ 	# return pdfkit.from_string(html, False)
+	 import weasyprint
+	 out_pdf = '/tmp/demo.pdf'
+	 return weasyprint.HTML(html).write_pdf(out_pdf)
 
 dados = pd.read_csv('recursos/PesquisaResumida.csv')
 
