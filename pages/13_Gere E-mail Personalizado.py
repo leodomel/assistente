@@ -30,22 +30,30 @@ def dataframe_with_selections(df, nome):
     # Filter the dataframe using the temporary column, then drop the column
     selected_rows = edited_df[edited_df.Select]
     return selected_rows.drop('Select', axis=1)
+def get_options():
+    return {
+        'encoding': 'UTF-8',
+        'enable-local-file-access': True
+    }
 
 def gera_pdf(dataset):
     import base64
     import os 
     # Path to wkhtmltopdf binary
-    wkhtmltopdf_path = os.path.join(os.getcwd(), 'wkhtmltopdf', 'bin', 'wkhtmltopdf')
-    if not os.path.isfile(wkhtmltopdf_path):
-        raise FileNotFoundError("wkhtmltopdf executable not found at %s" % wkhtmltopdf_path)
-    # Configure pdfkit to use the binary
-    config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+    # wkhtmltopdf_path = os.path.join(os.getcwd(), 'wkhtmltopdf', 'bin', 'wkhtmltopdf')
+    # if not os.path.isfile(wkhtmltopdf_path):
+    #     raise FileNotFoundError("wkhtmltopdf executable not found at %s" % wkhtmltopdf_path)
+    # # Configure pdfkit to use the binary
+    # config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+
 
     env = Environment(loader=FileSystemLoader("."), autoescape=select_autoescape())
     template = env.get_template("template_email.html")
     tabela_html = dataset.to_html()
     html = template.render(tabela_html=tabela_html)
-    return pdfkit.from_string(html, False, verbose=True)
+    config = pdfkit.configuration(wkhtmltopdf='/opt/bin/wkhtmltopdf')
+    # pdfkit.from_string(html, 'output.pdf', configuration=config)
+    return pdfkit.from_string(html, False, verbose=True, configuration=config)
     # import weasyprint
     # out_pdf = '/tmp/demo.pdf'
     # return weasyprint.HTML(html).write_pdf(out_pdf)
