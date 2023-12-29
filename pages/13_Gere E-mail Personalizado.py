@@ -52,7 +52,7 @@ def gera_pdf(dataset):
     tabela_html = dataset.to_html()
     html = template.render(tabela_html=tabela_html)
     # config = pdfkit.configuration(wkhtmltopdf='/home/adminuser/venv/bin/wkhtmltopdf')
-    config = pdfkit.configuration(wkhtmltopdf='/home/adminuser/venv/lib/python3.9/site-packages/wkhtmltopdf')
+    config = pdfkit.configuration(wkhtmltopdf='/home/adminuser/venv/lib/python3.9/site-packages/wkhtmltopdf/bin')
     
     # pdfkit.from_string(html, 'output.pdf', configuration=config)
     return pdfkit.from_string(html, False, verbose=True, configuration=config)
