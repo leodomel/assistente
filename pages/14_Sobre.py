@@ -4,8 +4,13 @@ st.header('💙 SOBRE')
 
 st.divider()
 
-st.write('COMPONENTES DO GRUPO')
+st.subheader('COMPONENTES DO GRUPO')
+
+st.write("Leonardo Melo e Milena de Carvalho")
 
 st.divider()
 
-st.write("Leonardo Melo e Milena de Carvalho")
+st.subheader('INSTRUÇÕES PARA EXECUTAR LOCAL')
+
+st.write("""Para gerar o PDF é necessário executar o código em um servidor local do streamlint, pois o
+         componente de pdf só funciona localmente""")
