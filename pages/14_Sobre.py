@@ -6,7 +6,8 @@ st.divider()
 
 st.subheader('Componentes do Grupo')
 
-st.write("Leonardo Melo e Milena de Carvalho Cordeiro")
+st.markdown('* Leonardo Melo')
+st.markdown('* Milena de Carvalho Cordeiro')
 
 st.divider()
 
