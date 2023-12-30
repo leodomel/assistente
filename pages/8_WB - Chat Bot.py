@@ -40,6 +40,7 @@ def update_estilo_session():
 
 
 def chat_moderations(texto):
+    import numpy as np
     tamanho = len(texto.split(" "))
     if tamanho > 3000:
         return False
@@ -47,8 +48,9 @@ def chat_moderations(texto):
         df_baixo_calao = pd.read_csv('recursos/baixo_calao.csv')
         df_baixo_calao.columns=['palavra']
         for palavra in texto.split(" "):
-            if palavra in df_baixo_calao.palavra:
+            if sum(np.isin(df_baixo_calao['palavra'], palavra)) > 0:
                 return False
+        return True
 
     client = OpenAI()
     response = dict(client.moderations.create(input=texto).results[0])
