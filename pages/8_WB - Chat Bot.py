@@ -33,6 +33,9 @@ if "estilo_atual" not in st.session_state:
 if "desabilita_input" not in st.session_state:
     st.session_state.desabilita_input = False
 
+if "finaliza" not in st.session_state:
+    st.session_state.finaliza = False
+
 def update_estilo_session():
     st.session_state.estilo_ant = st.session_state.estilo_atual
     st.session_state.estilo_atual= st.session_state.estilo
@@ -40,18 +43,6 @@ def update_estilo_session():
 
 
 def chat_moderations(texto):
-    import numpy as np
-    tamanho = len(texto.split(" "))
-    if tamanho > 3000:
-        return False
-    else:
-        df_baixo_calao = pd.read_csv('recursos/baixo_calao.csv')
-        df_baixo_calao.columns=['palavra']
-        for palavra in texto.split(" "):
-            if sum(np.isin(df_baixo_calao['palavra'], palavra)) > 0:
-                return False
-        return True
-
     client = OpenAI()
     response = dict(client.moderations.create(input=texto).results[0])
     return response['flagged']
@@ -86,12 +77,21 @@ def monta_registro_chat(conversa, tokens, custo, pergunta, resposta):
 #  # Salvando a tabela como um arquivo PDF
 #  return type(plt.savefig('tabela_dataframe.pdf', bbox_inches='tight', pad_inches=0.5))
 
-def gera_pdf(dataset):
+def gera_pdf(dataset, c, t):
   env = Environment(loader=FileSystemLoader("."), autoescape=select_autoescape())
   template = env.get_template("template.html")
   tabela_html = dataset.to_html()
+  str_html = '<br><p>A quantidade total de Tokens do diálogo é ' + str(t) + ' , tendo o Custo total de ' + str(c) + '</p>'
+  #st.write(tabela_html + str_html)
+  tabela_html = tabela_html + str_html
   html = template.render(tabela_html=tabela_html)
   return pdfkit.from_string(html, False)
+
+def finaliza_dialogo():
+    if "finaliza" not in st.session_state:
+        st.session_state.finaliza = False
+    else:
+        st.session_state.finaliza = st.session_state.chk_finalizar
 
 #flai = 'recursos/logo flai com sombra.png'
 
@@ -117,6 +117,17 @@ prompt = st.chat_input("Digite alguma coisa", key='chat_input')
 with aba1:
 
     st.title("WB - Assistente de Violência contra a Mulher")
+    c0, c1, _, _, _, _, _, _, _, _, _, _= st.columns([0.5,1.2,1,1,1,1,1,1,1,1,1,1])
+
+    with c0:
+        c = st.checkbox(label = 'Finalizar', 
+            help='Configura os prediotres marcados na seleção múltipla como nulo', 
+            on_change=finaliza_dialogo,
+            disabled=False, 
+            key='chk_finalizar',
+            label_visibility="collapsed") #hidden #collapsed
+    with c1:
+        st.write("Finalizar")
 
     chat = ChatOpenAI(temperature=round(temperatura, 1), max_tokens=token, model_name="gpt-3.5-turbo")
 
@@ -235,19 +246,14 @@ with aba2:
 
 with aba3:
     st.header('Histórico')
-    st.write(st.session_state.mdf)
+    st.dataframe(st.session_state.mdf, use_container_width=True)
    
-    if (len(st.session_state.mdf) > 0):
+    if (len(st.session_state.mdf) > 0) and st.session_state.finaliza:
+        c = st.session_state.mdf.loc[:,'Custo'].sum()
+        t = st.session_state.mdf.loc[:,'Tokens'].sum()
+
         st.download_button(
             "⬇️ Download PDF",
-            data=gera_pdf(st.session_state.mdf),
+            data=gera_pdf(st.session_state.mdf, c, t),
             file_name="hist_dialogo.pdf",
             mime="application/octet-stream")
-
-    
-    
-
-    
-
-
-
